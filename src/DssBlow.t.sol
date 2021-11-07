@@ -1,6 +1,7 @@
 pragma solidity ^0.6.7;
 
 import "ds-test/test.sol";
+import "dss-interfaces/Interfaces.sol";
 
 import "./DssBlow.sol";
 
@@ -19,14 +20,18 @@ contract DssBlowTest is DSTest {
     Hevm hevm;
 
     DssBlow blow;
+    DSTokenAbstract dai;
+    VatAbstract vat;
     address vow = 0xA950524441892A31ebddF91d3cEEFa04Bf454466;
     address daiJoin = 0x9759A6Ac90977b93B58547b4A71c78317f391A28;
     address dai_ = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
 
+
     function setUp() public {
         hevm = Hevm(address(bytes20(uint160(uint256(keccak256('hevm cheat code'))))));
         blow = new DssBlow(daiJoin, vow);
-        dai = DaiLike(dai_);
+        dai = DSTokenAbstract(dai_);
+        vat = VatAbstract(0x35D1b3F3D7966A1DFe207aa4514C12a259A0492B);
     }
 
     function testFail_basic_sanity() public {
@@ -37,9 +42,17 @@ contract DssBlowTest is DSTest {
         assertTrue(true);
     }
 
-    function test_blow_contract_balance(uint256 amount) public {
-        assertEq(dai.balanceOf(addres(this)) == 0);
+    function test_blow_contract_balance() public {
+        uint256 amount = 10 * WAD;
+        assertEq(dai.balanceOf(address(this)), 0);
+        uint256 vowBalance = vat.dai(vow);
         _giveTokens(dai, amount);
+        dai.approve(address(blow), amount);
+        dai.transferFrom(address(this), address(blow), amount);
+        assertEq(dai.balanceOf(address(blow)), amount);
+        blow.blow();
+        assertEq(dai.balanceOf(address(blow)), 0);
+        //assertEq(vat.dai(vow), vowBalance+amount);
 
     }
 
