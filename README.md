@@ -4,7 +4,7 @@ DssBlow makes it easy to send Dai to the `vow` aka the Maker surplus buffer. Thi
 ## Functionality
 
 ### `blow()`
-Calling the `blow()` function will automatically `join` any Dai deposited in `DssBlow` to the `vow`.
+Calling the `blow()` function will automatically `join` any Dai deposited in DssBlow to the `vow`.
 Therefore in order to repay Dai to the Maker surplus buffer, you simply send Dai to the DssBlow contract, and subsequentially call `blow()`.
 
 ### `blow(uint256 wad)`
