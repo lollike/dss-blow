@@ -38,7 +38,7 @@ contract DssBlow {
     // --- Init ---
     constructor(address daiJoin_, address vow_) public { 
         daiJoin = DaiJoinLike(daiJoin_);
-        DaiLike dai_ = dai = DaiLike(DaiJoinLike(daiJoin_).dai());
+        dai = DaiLike(DaiJoinLike(daiJoin_).dai());
         vow = vow_;
         DaiLike(DaiJoinLike(daiJoin_).dai()).approve(daiJoin_, uint256(-1));
     }
