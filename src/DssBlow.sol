@@ -18,6 +18,7 @@ pragma solidity ^0.6.12;
 
 interface DaiLike {
     function balanceOf(address) external returns (uint256);
+    function approve(address usr, uint wad) external returns (bool);
     function transferFrom(address src, address dst, uint wad) external returns (bool);
 }
     
@@ -27,7 +28,6 @@ interface DaiJoinLike {
 }
 
 contract DssBlow {
-
     DaiJoinLike public immutable daiJoin;
     DaiLike     public immutable dai;
     address     public immutable vow;
@@ -40,18 +40,20 @@ contract DssBlow {
         daiJoin = DaiJoinLike(daiJoin_);
         DaiLike dai_ = dai = DaiLike(DaiJoinLike(daiJoin_).dai());
         vow = vow_;
+        DaiLike(DaiJoinLike(daiJoin_).dai()).approve(daiJoin_, uint256(-1));
     }
 
-    // Send Dai deposited in this contract to the `vow`
+    // `join` Dai deposited in this contract to the `vow`
     function blow() public {
         uint256 balance = dai.balanceOf(address(this));
-        dai.transferFrom(address(this), vow, balance);
+        daiJoin.join(vow, balance);
         emit Blow(balance);
     }
 
-    // Send `wad` amount of Dai from your wallet to the `vow`
+    // `join` `wad` amount of Dai from your wallet to the `vow`. Requires Dai approval of this contract.
     function blow(uint256 wad) public {
-        dai.transferFrom(msg.sender, vow, wad);
+        dai.transferFrom(msg.sender, address(this), wad);
+        daiJoin.join(vow, wad);
         emit Blow(wad);
     }
 }
