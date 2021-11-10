@@ -12,4 +12,5 @@ You can also call `blow(uint256 wad)` to send a specified amount of Dai directly
 
 ## Deployment
 
+- [Mainnet](https://etherscan.io/address/0x0048fc4357db3c0f45adea433a07a20769ddb0cf#code)
 - [Goerli](https://goerli.etherscan.io/address/0x5db4d1be83ee0dac45e0cc2e5565a19d9c428daf#code)
